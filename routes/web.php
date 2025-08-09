@@ -41,6 +41,10 @@ Route::middleware('checkLogin')->group(function () {
         Route::get('tugas/edit/{id}', [TugasController::class, 'edit'])->name('tugasEdit');
         Route::post('tugas/update/{id}', [TugasController::class, 'update'])->name('tugasUpdate');
         Route::delete('tugas/destroy/{id}', [TugasController::class, 'destroy'])->name('tugasDestroy');
+
+        // Export
+        Route::get('tugas/export/excel', [TugasController::class, 'exportExcel'])->name('tugasExportExcel');
+        Route::get('tugas/export/pdf', [TugasController::class, 'exportPdf'])->name('tugasExportPdf');
     });
 
     Route::post('tugas/upload/{id}', [TugasController::class, 'upload'])->name('tugasUpload');

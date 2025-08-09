@@ -1,0 +1,142 @@
+/*
+Custom Styling V3: Bright & Cheerful Theme
+*/
+
+/* 1. General & Typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9fafb; /* Very light grey background */
+    color: #3d405b;
+    font-size: 15px;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1.h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3d405b;
+}
+
+/* 2. Sidebar & Navigation */
+.sidebar {
+    background-image: linear-gradient(180deg, #3498db 10%, #2980b9 100%); /* Bright blue gradient */
+}
+
+.sidebar .nav-item .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 12px 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-item .nav-link i.fas {
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.sidebar .nav-item.active .nav-link {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 700;
+}
+
+.sidebar .nav-item .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.sidebar .sidebar-brand {
+    background-color: #2577b5;
+    height: 70px;
+}
+
+/* 3. Topbar */
+.topbar {
+    height: 70px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+/* 4. Buttons & Forms */
+.btn {
+    border-radius: 25px; /* Pill-shaped buttons */
+    padding: 10px 22px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #f39c12; /* Cheerful Orange */
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+}
+
+.btn-success {
+    background-color: #2ecc71;
+}
+
+/* 5. Cards */
+.card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07) !important;
+    margin-bottom: 2rem;
+}
+
+.card .card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3498db;
+}
+
+.card .card-body {
+    padding: 1.5rem;
+}
+
+/* 6. Tables */
+.table-responsive {
+    border: none;
+}
+
+.table th, .table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-top: 1px solid #f0f0f0;
+}
+
+.table thead th {
+    border: none;
+    font-weight: 600;
+    color: #888;
+}
+
+.table thead.bg-primary {
+    background-color: #ffffff !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #fdfaf1;
+}
+
+/* 7. Alerts */
+.alert-warning {
+    background-color: #fff8e1;
+    border-left: 5px solid #f39c12;
+    color: #856404;
+    border-radius: 8px;
+}

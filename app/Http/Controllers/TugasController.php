@@ -8,17 +8,54 @@ use Illuminate\Http\Request;
 use Psy\Command\WhereamiCommand;
 use Illuminate\Support\Facades\Auth;
 
+use App\Exports\TugasExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class TugasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         if ($user->jabatan == 'Admin') {
+            $query = Tugas::with('user');
+
+            // Search
+            if ($request->has('search') && $request->search != '') {
+                $query->where(function ($q) use ($request) {
+                    $q->where('tugas', 'like', '%' . $request->search . '%')
+                        ->orWhereHas('user', function ($q) use ($request) {
+                            $q->where('nama', 'like', '%' . $request->search . '%');
+                        });
+                });
+            }
+
+            // Filter by status
+            if ($request->has('status') && $request->status != '') {
+                if ($request->status == 'selesai') {
+                    $query->whereNotNull('file_tugas');
+                } elseif ($request->status == 'belum') {
+                    $query->whereNull('file_tugas');
+                }
+            }
+
+            // Sorting
+            $sort = $request->get('sort', 'tanggal_selesai'); // default sort
+            $direction = $request->get('direction', 'desc'); // default direction
+
+            if ($sort == 'nama') {
+                $query->join('users', 'tugas.user_id', '=', 'users.id')
+                      ->orderBy('users.nama', $direction)
+                      ->select('tugas.*');
+            } else {
+                $query->orderBy($sort, $direction);
+            }
+
             $data = array(
                 'title' => 'Data Tugas',
                 'menuAdminTugas' => 'active',
-                'tugas' => Tugas::with('user')->get(),
+                'tugas' => $query->paginate(10)->withQueryString(),
             );
             return view('admin/tugas/index', $data);
         } else {
@@ -29,6 +66,57 @@ class TugasController extends Controller
             );
             return view('mahasiswa/tugas/index', $data);
         }
+    }
+
+    private function getFilteredTugas(Request $request)
+    {
+        $query = Tugas::with('user');
+
+        // Search logic from index
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('tugas', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('user', function ($q) use ($request) {
+                        $q->where('nama', 'like', '%' . $request->search . '%');
+                    });
+            });
+        }
+
+        // Filter by status logic from index
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'selesai') {
+                $query->whereNotNull('file_tugas');
+            } elseif ($request->status == 'belum') {
+                $query->whereNull('file_tugas');
+            }
+        }
+
+        // Sorting logic from index
+        $sort = $request->get('sort', 'tanggal_selesai');
+        $direction = $request->get('direction', 'desc');
+
+        if ($sort == 'nama') {
+            $query->join('users', 'tugas.user_id', '=', 'users.id')
+                  ->orderBy('users.nama', $direction)
+                  ->select('tugas.*');
+        } else {
+            $query->orderBy($sort, $direction);
+        }
+
+        return $query->get();
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $tugas = $this->getFilteredTugas($request);
+        return Excel::download(new TugasExport($tugas), 'data-tugas.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $tugas = $this->getFilteredTugas($request);
+        $pdf = Pdf::loadView('admin.tugas.pdf', ['tugas' => $tugas]);
+        return $pdf->download('data-tugas.pdf');
     }
 
     public function create()
